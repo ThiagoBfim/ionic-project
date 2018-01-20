@@ -1,6 +1,6 @@
 import { MoovieProvider } from './../../providers/moovie/moovie';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 
 /**
  * Generated class for the FeedPage page.
@@ -29,20 +29,45 @@ export class FeedPage {
   }
 
   public lista_filmes = new Array<any>();
-
+  public loading;
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private movieProvider: MoovieProvider) {
+    private movieProvider: MoovieProvider, public loadingCtrl: LoadingController) {
   }
 
-  ionViewDidLoad() {
+  abrirCarregando() {
+    this.loading = this.loadingCtrl.create({
+      content: 'Carregando filmes...'
+    });
+
+    this.loading.present();
+  }
+  fecharCarregando() {
+    this.loading.dismiss();
+  }
+
+  doRefresh(refresher) {
+    this.carregarFilmes();
+
+    setTimeout(() => {
+      refresher.complete();
+    }, 1000);
+  }
+
+  ionViewDidEnter() {
+    this.carregarFilmes();
+  }
+
+  carregarFilmes() {
+    this.abrirCarregando();
     this.movieProvider.getLatestMovies().subscribe(
       data => {
         const objRtorno = (data as any);
         this.lista_filmes = objRtorno.results;
-        console.log(this.lista_filmes);
-    }, error => {
-      console.log(error);
-    });
+        this.fecharCarregando();
+      }, error => {
+        console.log(error);
+        this.fecharCarregando();
+      });
   }
 
 }
