@@ -1,3 +1,4 @@
+import { FilmeDetalhesPage } from './../filme-detalhes/filme-detalhes';
 import { MoovieProvider } from './../../providers/moovie/moovie';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
@@ -28,8 +29,11 @@ export class FeedPage {
     timeComment: "11h ago"
   }
 
+  public page = 1;
   public lista_filmes = new Array<any>();
   public loading;
+  public infiniteScroll;
+
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private movieProvider: MoovieProvider, public loadingCtrl: LoadingController) {
   }
@@ -57,17 +61,33 @@ export class FeedPage {
     this.carregarFilmes();
   }
 
-  carregarFilmes() {
+  carregarFilmes(newpage: boolean = false) {
     this.abrirCarregando();
-    this.movieProvider.getLatestMovies().subscribe(
+    this.movieProvider.getLatestMovies(this.page).subscribe(
       data => {
         const objRtorno = (data as any);
-        this.lista_filmes = objRtorno.results;
+        if (newpage) {
+          this.lista_filmes = this.lista_filmes.concat(objRtorno.results);
+          this.infiniteScroll.complete();
+        } else {
+          this.lista_filmes = objRtorno.results;
+        }
         this.fecharCarregando();
       }, error => {
         console.log(error);
         this.fecharCarregando();
       });
+  }
+
+  abirDetalhes(filme) {
+    console.log(filme.id);
+    this.navCtrl.push(FilmeDetalhesPage, { id: filme.id });
+  }
+
+  doInfinite(infiniteScroll) {
+    this.infiniteScroll = infiniteScroll;
+    this.page++;
+    this.carregarFilmes(true);
   }
 
 }

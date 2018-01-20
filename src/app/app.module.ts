@@ -18,6 +18,8 @@ import { MoovieProvider } from '../providers/moovie/moovie';
 import { HttpClientModule } from '@angular/common/http';
 import { ConfiguracoesPageModule } from '../pages/configuracoes/configuracoes.module';
 import { PerfilPageModule } from '../pages/perfil/perfil.module';
+import { FilmeDetalhesPageModule } from '../pages/filme-detalhes/filme-detalhes.module';
+import { FilmeDetalhesPage } from '../pages/filme-detalhes/filme-detalhes';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { PerfilPageModule } from '../pages/perfil/perfil.module';
     HttpClientModule,
     ConfiguracoesPageModule,
     SobrePageModule,
-    PerfilPageModule
+    PerfilPageModule,
+    FilmeDetalhesPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -44,7 +47,8 @@ import { PerfilPageModule } from '../pages/perfil/perfil.module';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    FilmeDetalhesPage
   ],
   providers: [
     StatusBar,
