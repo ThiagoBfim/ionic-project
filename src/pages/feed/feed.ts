@@ -1,3 +1,4 @@
+import { MoovieProvider } from './../../providers/moovie/moovie';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
@@ -12,14 +13,36 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 @Component({
   selector: 'page-feed',
   templateUrl: 'feed.html',
+  providers: [
+    MoovieProvider
+  ]
 })
 export class FeedPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public feed = {
+    titulo: "Marty McFly",
+    data: "November 5, 1955",
+    descricao: "Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?! Whoa. This is heavy.",
+    qtdLikes: 12,
+    qtdComments: 3,
+    timeComment: "11h ago"
+  }
+
+  public lista_filmes = new Array<any>();
+
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    private movieProvider: MoovieProvider) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad FeedPage');
+    this.movieProvider.getLatestMovies().subscribe(
+      data => {
+        const objRtorno = (data as any);
+        this.lista_filmes = objRtorno.results;
+        console.log(this.lista_filmes);
+    }, error => {
+      console.log(error);
+    });
   }
 
 }
